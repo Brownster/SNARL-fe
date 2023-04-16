@@ -100,9 +100,16 @@ def plot_alerts_per_node_day(file_path, start_date=None, end_date=None):
     ax.set_ylabel('Number of Alerts')
     ax.set_title('Alerts per Node by Day of Week')
 
-    # Display the plot
-    plt.show()
+    # Save the plot to a bytes buffer
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+    img_data = base64.b64encode(img_buffer.getvalue()).decode()
 
+    # Close the plot to avoid memory leak
+    plt.close()
+
+    return img_data
 
 
 def count_alerts_per_node_day(file_path, start_date=None, end_date=None):
@@ -246,6 +253,16 @@ def top_10_additional_info():
     table_data = count_top_additional_information(file_path, start_date, end_date)
 
     return render_template('top_10_additional_info.html', table_data=table_data)
+
+
+@app.route('/plot_alerts_per_node_day', methods=['POST'])
+def plot_alerts_per_node_day_route():
+    file_path = request.form['file_path']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+
+    img_data = plot_alerts_per_node_day(file_path, start_date, end_date)
+    return render_template('plot_alerts_per_node_day.html', img_data=img_data)
 
 
 
