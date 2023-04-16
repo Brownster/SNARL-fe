@@ -66,12 +66,11 @@ def count_top_additional_information(file_path, start_date=None, end_date=None):
     # Sort the counts in descending order and get the top 10
     top_10_additional_info = count_per_additional_info.sort_values(ascending=False).head(10)
 
-    # Display the results in a table using PrettyTable
-    table = PrettyTable()
-    table.field_names = ["Additional Information", "Number of Alerts"]
-    for info, count in top_10_additional_info.items():
-        table.add_row([info, count])
-    print(table)
+    # Create a list of dictionaries to store the results
+    table_data = [{"additional_info": info, "count": count} for info, count in top_10_additional_info.items()]
+
+    return table_data
+
 
 
 
@@ -236,6 +235,17 @@ def heatmap():
     heatmap_img = Heat_count_alerts_per_node_hour(file_path, start_date, end_date)
 
     return render_template('heatmap.html', heatmap_img=heatmap_img)
+
+
+@app.route('/top_10_additional_info', methods=['POST'])
+def top_10_additional_info():
+    file_path = request.form['file_path']
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+
+    table_data = count_top_additional_information(file_path, start_date, end_date)
+
+    return render_template('top_10_additional_info.html', table_data=table_data)
 
 
 
