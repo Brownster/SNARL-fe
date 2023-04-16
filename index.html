@@ -5,44 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alert Query Tool</title>
-</head>
-<body>
-    <h1>Alert Query Tool</h1>
-    <form id="query_form" method="POST">
-        <label for="query">Select query:</label>
-        <select id="query" name="query">
-            <option value="Number of Alerts by Node">Number of Alerts by Node</option>
-            <option value="Alerts by Node and Day">Alerts by Node and Day</option>
-            <option value="Plot Alerts by Node and Day">Plot Alerts by Node and Day</option>
-            <option value="Top 10 Additional Information">Top 10 Additional Information</option>
-            <option value="Heat Map of Alerts By Customer By Hour">Heat Map of Alerts By Customer By Hour</option>
-        </select><br><br>
-
-        <label for="file_path">Select CSV file:</label>
-        <input type="text" id="file_path" name="file_path"><br><br>
-
-        <label for="start_date">Start date:</label>
-        <input type="date" id="start_date" name="start_date"><br><br>
-
-        <label for="end_date">End date:</label>
-        <input type="date" id="end_date" name="end_date"><br><br>
-
-        <input type="submit" value="Run" onclick="submitForm()">
-    </form>
-
     <script>
         function submitForm() {
             const query = document.getElementById("query").value;
             const form = document.getElementById("query_form");
             
-            if (query === "Top 10 Additional Information") {
-                form.action = "/top_10_additional_info";
+            if (query === "Plot Alerts by Node and Day") {
+                form.action = "/plot_alerts_per_node_day";
             } else {
-                // Add more conditions here for other query options
+                form.action = "/run_query";
             }
 
             form.submit();
         }
     </script>
+</head>
+<body>
+    <h1>Alert Query Tool</h1>
+    <form id="query_form" method="post" onsubmit="event.preventDefault(); submitForm();">
+        <label for="query">Select query:</label>
+        <select id="query" name="query">
+            <option>Number of Alerts by Node</option>
+            <option>Alerts by Node and Day</option>
+            <option>Plot Alerts by Node and Day</option>
+            <option>Top 10 Additional Information</option>
+            <option>Heat Map of Alerts By Customer By Hour</option>
+        </select>
+        <br><br>
+        <label for="file_path">Select CSV file:</label>
+        <input type="text" id="file_path" name="file_path" required>
+        <br><br>
+        <label for="start_date">Start date:</label>
+        <input type="date" id="start_date" name="start_date">
+        <br><br>
+        <label for="end_date">End date:</label>
+        <input type="date" id="end_date" name="end_date">
+        <br><br>
+        <label for="n">N:</label>
+        <input type="number" id="n" name="n">
+        <br><br>
+        <input type="submit" value="Run">
+    </form>
 </body>
 </html>
