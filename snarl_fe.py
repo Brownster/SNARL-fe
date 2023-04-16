@@ -133,12 +133,11 @@ def count_alerts_per_node_day(file_path, start_date=None, end_date=None):
     # Fill NaN values with 0
     count_per_node_day = count_per_node_day.fillna(0).astype(int)
 
-    # Display the results in a table using PrettyTable
-    table = PrettyTable()
-    table.field_names = ["Node"] + list(count_per_node_day.columns)
-    for node, row in count_per_node_day.iterrows():
-        table.add_row([node] + row.tolist())
-    print(table)
+    # Convert the results to an HTML table using Pandas
+    result_html = count_per_node_day.to_html()
+
+    return result_html
+
 
 ###### counts per cust
 def count_alerts_per_node(file_path, start_date=None, end_date=None):
@@ -263,6 +262,15 @@ def plot_alerts_per_node_day_route():
 
     img_data = plot_alerts_per_node_day(file_path, start_date, end_date)
     return render_template('plot_alerts_per_node_day.html', img_data=img_data)
+
+
+@app.route('/run_query', methods=['POST'])
+def run_query():
+    # ...
+    elif query == 'Alerts by Node and Day':
+        result = count_alerts_per_node_day(file_path, start_date, end_date)
+    # ...
+    return render_template('result.html', result=result)
 
 
 
