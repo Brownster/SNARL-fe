@@ -2,52 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alert Query Tool</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="my-4">Alert Query Tool</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-danger">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <form action="{{ url_for('index') }}" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="query">Select query:</label>
-                <select class="form-control" name="query" id="query">
-                    <option>Number of Alerts by Node</option>
-                    <option>Alerts by Node and Day</option>
-                    <option>Plot Alerts by Node and Day</option>
-                    <option>Top 10 Additional Information</option>
-                    <option>Heat Map of Alerts By Customer By Hour</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="file">Select CSV file:</label>
-                <input type="file" name="file" id="file" class="form-control-file">
-            </div>
-            <div class="form-group">
-                <label for="start_date">Start date:</label>
-                <input type="date" name="start_date" id="start_date" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="end_date">End date:</label>
-                <input type="date" name="end_date" id="end_date" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="n">N:</label>
-                <input type="number" name="n" id="n" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Run</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <h1>Alert Query Tool</h1>
+    <form id="query_form" method="POST">
+        <label for="query">Select query:</label>
+        <select id="query" name="query">
+            <option value="Number of Alerts by Node">Number of Alerts by Node</option>
+            <option value="Alerts by Node and Day">Alerts by Node and Day</option>
+            <option value="Plot Alerts by Node and Day">Plot Alerts by Node and Day</option>
+            <option value="Top 10 Additional Information">Top 10 Additional Information</option>
+            <option value="Heat Map of Alerts By Customer By Hour">Heat Map of Alerts By Customer By Hour</option>
+        </select><br><br>
+
+        <label for="file_path">Select CSV file:</label>
+        <input type="text" id="file_path" name="file_path"><br><br>
+
+        <label for="start_date">Start date:</label>
+        <input type="date" id="start_date" name="start_date"><br><br>
+
+        <label for="end_date">End date:</label>
+        <input type="date" id="end_date" name="end_date"><br><br>
+
+        <input type="submit" value="Run" onclick="submitForm()">
+    </form>
+
+    <script>
+        function submitForm() {
+            const query = document.getElementById("query").value;
+            const form = document.getElementById("query_form");
+            
+            if (query === "Top 10 Additional Information") {
+                form.action = "/top_10_additional_info";
+            } else {
+                // Add more conditions here for other query options
+            }
+
+            form.submit();
+        }
+    </script>
 </body>
 </html>
