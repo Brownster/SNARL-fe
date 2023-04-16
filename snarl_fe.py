@@ -4,6 +4,8 @@ from datetime import datetime
 import os
 import base64
 from io import BytesIO
+import pandas as pd
+
 
 
 def Heat_count_alerts_per_node_hour(file_path, start_date=None, end_date=None):
@@ -152,14 +154,8 @@ def count_alerts_per_node(file_path, start_date=None, end_date=None):
     # Group the data by node and count the number of alerts for each node
     count_per_node = df.groupby('Node')['Number'].count()
 
-    # Display the results in a table using PrettyTable
-    table = PrettyTable()
-    table.field_names = ["Node", "Number of Alerts"]
-    for node, count in count_per_node.items():
-        table.add_row([node, count])
-    print(table)
-
-
+    # Return the results as a dictionary
+    return count_per_node.to_dict()
 
 
 app = Flask(__name__)
@@ -271,6 +267,16 @@ def run_query():
         result = count_alerts_per_node_day(file_path, start_date, end_date)
     # ...
     return render_template('result.html', result=result)
+
+
+@app.route('/count_alerts_per_node', methods=['POST'])
+def alerts_per_node():
+    file_path = request.form['file_path']
+    start_date = request.form['start_date'] or None
+    end_date = request.form['end_date'] or None
+    results = count_alerts_per_node(file_path, start_date, end_date)
+    return render_template('count_alerts_per_node.html', results=results)
+
 
 
 
